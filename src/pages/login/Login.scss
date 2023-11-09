@@ -1,0 +1,26 @@
+
+.Login{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .Login-box{
+        border: 1px solid black;
+        padding: 40px;
+        border-radius: 4px;
+    }
+    label,input{
+        display: block;
+        padding: 10px;
+
+    }
+    .submit{
+        margin-top: 20px;
+        
+    }
+    .signupLink{
+        font-size: smaller;
+        // font-weight: lighter;
+    }
+}
