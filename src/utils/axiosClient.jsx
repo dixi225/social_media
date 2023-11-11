@@ -1,10 +1,9 @@
 import axios from 'axios'
 import { removeItem, getItem ,setItem  } from './localStorageManager'
 const axiosClient=axios.create({
-     baseURL:'http://localhost:4000',
+     baseURL:import.meta.env.VITE_SERVER_BASE_URL,
      withCredentials:true
 })
-
 axiosClient.interceptors.request.use(
     (request)=>{
         const accessToken=getItem('accessToken')
@@ -14,31 +13,28 @@ axiosClient.interceptors.request.use(
 )
 axiosClient.interceptors.response.use(
     async(response)=>{
-         const data=response.data                
+        const data=response.data
         if(data.status==='ok') return data
         const originalRequest=response.config
         const statusCode=data.statusCode
         const error=data.messege
-        if(statusCode===401&&originalRequest.url==='http://localhost:4000/auth/refresh')
-        {
-            //refresh token expires
+        if(statusCode===401&&originalRequest.url===`${import.meta.env.VITE_SERVER_BASE_URL}/auth/refresh`){
             removeItem('accessToken')
-            window.location.replace('/login','_self');
-            return Promise.reject(error)
+            window.location.replace('/login','_self')
+            return Promise.reject(error) //returns -invalid refresh token
         }
         if(statusCode===401)
         {
-            console.log(originalRequest);
-            const credentials=await JSON.parse(originalRequest.data)
-            const response=await axios.post('http://localhost:4000/auth/refresh',credentials)
+            const response= await axiosClient.get('/auth/refresh')
+            console.log(response);
             if(response.status==='ok')
             {
-                setItem('accessToken',response.messege.accessToken)
-                originalRequest.headers[`Authorization`]=`Bearer ${getItem('accessToken')}`
+                const accessToken=response.messege.accessToken
+                setItem('accessToken',accessToken)
+                originalRequest.headers[`Authorization`]=`Bearer ${accessToken}`
                 return axios(originalRequest)
             }
         }
-        return Promise.reject(error)
     }
 )
 export default axiosClient

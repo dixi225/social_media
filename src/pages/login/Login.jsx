@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import "./Login.scss"
 import { Link } from 'react-router-dom'
 import axiosClient from '../../utils/axiosClient'
-import { setItem } from '../../utils/localStorageManager'
+import { getItem, setItem } from '../../utils/localStorageManager'
 
 const Login = () => {
   const [email,setEmail]=useState('')
@@ -14,9 +14,10 @@ const Login = () => {
         email,
         password
       })
-      setItem('accessToken',result.accessToken)
+      setItem('accessToken',result.messege.accessToken);
+      getItem('accessToken')
     }
-     catch (error) {
+     catch (error){
       console.log(error);
     }
   }
