@@ -26,11 +26,10 @@ axiosClient.interceptors.response.use(
         if(statusCode===401)
         {
             const response= await axiosClient.get('/auth/refresh')
-            console.log(response);
             if(response.status==='ok')
             {
                 const accessToken=response.messege.accessToken
-                setItem('accessToken',accessToken)
+                setItem('accessToken',accessToken)  
                 originalRequest.headers[`Authorization`]=`Bearer ${accessToken}`
                 return axios(originalRequest)
             }

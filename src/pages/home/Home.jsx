@@ -1,20 +1,15 @@
-import React, { useEffect } from 'react'
-import axiosClient from '../../utils/axiosClient'
+import React from 'react'
+import Navbar from '../../components/Navbar'
+import { Outlet } from 'react-router-dom'
 
-const Home = () => {
-  useEffect(()=>{
-      fetchData()
-  },[])
-  const  fetchData=async()=>{
-    const data=axiosClient.get('/posts/all')
-    console.log(data);
-  }
+const Home=()=>{
   return (
-
     <div>
-      Home
-    </div>
-  )
+     <Navbar/>
+     <Outlet/>
+   </div>
+ )
 }
+
 
 export default Home
